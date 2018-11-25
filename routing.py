@@ -1,9 +1,4 @@
-import os
 from flask import Flask, request, redirect, url_for, render_template
-from threading import Thread
-from multiprocessing.pool import ThreadPool
-import subprocess
-from werkzeug.utils import secure_filename
 
 import storage.handler_user as handler_user
 
