@@ -33,38 +33,44 @@
 
 </nav>
 
-{% if data %}
-
-<h1 class="title">
-  Trimiteri Radiografie
-</h1>
+<br>
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-2 text-center">
 
 <h2>
- <form>
-<input type="button" value="Adauga Trimitere Radiografie" onclick="window.location.href='/newrequest'" />
-</form> 
+    <input type="button" value="Adauga Trimitere Radiografie" class="btn btn-info align-middle" href="#"/>
 </h2>
+</div>
+</div>
+</div>
+
+{% if data %}
+
+
 
 
 <div class="table-wrapper">
-	<table>
+	<table class="table">
     <thead>
       <tr>
-        <th>Nume</th>
-        <th>CNP</th>
-        <th>Rezultate?</th>
+        <th scope="col">Nume</th>
+        <th scope="col">CNP</th>
+        <th scope="col">Rezultate</th>
       </tr>
     </thead>
     <tbody id="leaderboard-body">
         {% for item in data %}
             <tr>
-                <td>
+                <th scope="row">
+
+                
                     {% if item["Nume"] %}
                         {{item["Nume"]}}
                     {% else %}
                         N/A
                     {% endif %}
-                </td>
+                </th>
 
                 <td>
                     {% if item["CNP"] %}
@@ -76,18 +82,16 @@
 
                 <td>
                     {% if item["link"] %}
-                        <a href="{{item["link"]}}">Rezultat</a>
+                        <a href="{{item['link']}}">Rezultat</a>
                     {% else %}
                         -
                     {% endif %}
                 </td>
-
             </tr>
         {% endfor %}
     </tbody>
     </table>
 </div>
-
 {% else %}
 
 <h1 class="error-message">

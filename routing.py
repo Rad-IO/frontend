@@ -3,7 +3,6 @@ from flask import Flask, request, redirect, url_for, render_template
 from threading import Thread
 from multiprocessing.pool import ThreadPool
 import subprocess
-from check_one import predict
 from werkzeug.utils import secure_filename
 
 uploaded = False
@@ -16,22 +15,35 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-		   
+           
 data = [{'Nume':"Ion Ionescu", 'CNP':"1234567890", 'link':"http://example.com"}]
 
 @app.route('/doctor_page', methods=['GET'])
 def doctor_page():
-			return render_template('doctor_page.html', data=data )
+            return render_template('doctor_page.html', data=data )
 
-
+@app.route('/new_request', methods=['GET', 'POST'])
+def new_request():
+    if request.method == 'POST':
+        pacient_name = request.form['name']
+        pacient_cnp = request.form['cnp']
+        print(pacient_cnp, pacient_name)
+        return '''<!doctype html>
+                    <h1> Success here's your patient ID </h1>
+                    '''
+                    
+    return render_template('newrequest.html')
 
 @app.route('/results', methods=['GET'])
 def results():
-			return render_template('result2.html', pat1=l1[0] , pat2=l2[0] ,scor1=l1[1] , scor2=l2[1] )
+            return render_template('results2.html')
 
 @app.route('/radiologie', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        pacient_id = request.form['id']
+        pacient_comment = request.form['comment']
+        print(pacient_comment, pacient_id)
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
@@ -43,10 +55,14 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            uploaded = True
-            return redirect(url_for('results', path=path))
-    return render_template('index.html')
+            file_bytes = file.read()
+            print(file_bytes)
+        return redirect('/')
+
+    return render_template('radiologist_page.html')
+
+@app.route('/', methods=['GET'])
+def home():
+    return render_template('home.html')
+
 app.run(debug=True)
